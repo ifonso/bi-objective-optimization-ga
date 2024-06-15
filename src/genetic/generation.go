@@ -70,3 +70,20 @@ func Crossover(firstParent types.Genome, secondParent types.Genome) (types.Genom
 
 	return GenerateChildGenome(firstParent, secondParent, crossPoint), GenerateChildGenome(secondParent, firstParent, crossPoint)
 }
+
+// Mutates a genome by swapping two displacements.
+func Mutate(genome types.Genome) types.Genome {
+	child := make(types.Genome, len(genome))
+	copy(child, genome)
+
+	firstIndex := utils.RandRange(0, len(child)-1)
+	secondIndex := utils.RandRange(0, len(child)-1)
+
+	for firstIndex == secondIndex {
+		secondIndex = utils.RandRange(0, len(child)-1)
+	}
+
+	child[firstIndex], child[secondIndex] = child[secondIndex], child[firstIndex]
+
+	return child
+}

@@ -62,7 +62,9 @@ func GenerateRandomGenome(harbor []types.Container) types.Genome {
 	var genome types.Genome
 	var shipContainers []types.Container
 
-	for i := 0; i < len(currentHarbor); i++ {
+	currentHarborSize := len(currentHarbor)
+
+	for i := 0; i < currentHarborSize; i++ {
 		// remove a container from harbor
 		harborRemovedContainer := removeRandomContainer(&currentHarbor)
 		// get an available position in the ship

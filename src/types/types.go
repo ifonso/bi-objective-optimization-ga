@@ -1,9 +1,14 @@
 package types
 
 import (
+	"fmt"
 	"math"
 	"reflect"
 )
+
+type Equatable[T any] interface {
+	Equals(other T) bool
+}
 
 // Domain Types
 
@@ -37,6 +42,14 @@ func (d Displacement) Equals(other Displacement) bool {
 		d.FinalPosition.Equals(other.FinalPosition)
 }
 
+func (d Displacement) InitialPositionString() string {
+	return fmt.Sprintf("(%d, %d, %d)", d.InitialPosition.X, d.InitialPosition.Y, d.InitialPosition.Z)
+}
+
+func (d Displacement) FinalPositionString() string {
+	return fmt.Sprintf("(%d, %d, %d)", d.FinalPosition.X, d.FinalPosition.Y, d.FinalPosition.Z)
+}
+
 func (d Displacement) MovimentDistance() float64 {
 	return (math.Abs(float64(5+d.FinalPosition.X-d.InitialPosition.X)) +
 		math.Abs(float64(d.FinalPosition.Y-d.InitialPosition.Y)) +
@@ -55,7 +68,7 @@ type Population = []Genome
 
 // Used for ranking individuals in a population
 type GenomeFitness struct {
-	Genome *Genome
+	Genome Genome
 
 	MovimentFitness  float64
 	StabilityFitness float64
@@ -65,4 +78,14 @@ type GenomeFitness struct {
 
 	NormalizedMovimentFitness  float64
 	NormalizedStabilityFitness float64
+}
+
+func (gf GenomeFitness) Equals(other GenomeFitness) bool {
+	return gf.Genome.Equals(other.Genome) &&
+		gf.MovimentFitness == other.MovimentFitness &&
+		gf.StabilityFitness == other.StabilityFitness &&
+		gf.Rank == other.Rank &&
+		gf.CrowdingDistance == other.CrowdingDistance &&
+		gf.NormalizedMovimentFitness == other.NormalizedMovimentFitness &&
+		gf.NormalizedStabilityFitness == other.NormalizedStabilityFitness
 }

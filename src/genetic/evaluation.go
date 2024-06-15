@@ -27,10 +27,41 @@ func FitnessStability(genome types.Genome) float64 {
 // Returns the fitness of a genome, which is the sum of the distances of all displacements.
 func FitnessMoviments(genome types.Genome) float64 {
 	totalMoviments := 0.0
+
 	for _, displacement := range genome {
 		totalMoviments += displacement.MovimentDistance()
 	}
-	return totalMoviments
+
+	penality := float64(utils.InvalidOrderingCount(genome)/len(genome)) * totalMoviments
+
+	return totalMoviments + penality
 }
 
-// Ranking -----------------------------------------
+// Returns the best genome from a tournament selection.
+func TournamentSelection(population types.Population, tournamentSize int) types.Genome {
+	if tournamentSize > len(population) {
+		panic("Tournament size is greater than the population size")
+	}
+
+	selected := make(types.Population, tournamentSize)
+
+	for i := 0; i < tournamentSize; i++ {
+		selected[i] = population[utils.RandRange(0, len(population)-1)]
+	}
+
+	selected = RankIndividuals(selected)
+
+	return selected[0]
+}
+
+// Returns different parents based on tournament selection.
+func GetParents(population types.Population, tournamentSize int) (types.Genome, types.Genome) {
+	parent1 := TournamentSelection(population, tournamentSize)
+	parent2 := TournamentSelection(population, tournamentSize)
+
+	for parent1.Equals(parent2) {
+		parent2 = TournamentSelection(utils.RemoveElement(population, parent1), tournamentSize)
+	}
+
+	return parent1, parent2
+}
