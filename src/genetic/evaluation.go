@@ -18,7 +18,12 @@ func FitnessStability(genome types.Genome) float64 {
 	}
 
 	for i := 0; i < len(shipOrdering); i++ {
-		totalStability += utils.GetMetacentricHeight(shipOrdering[:i+1])
+		metacentricHeight := utils.GetMetacentricHeight(shipOrdering[:i+1])
+		if metacentricHeight < 0 {
+			totalStability += metacentricHeight * 5
+		} else {
+			totalStability += metacentricHeight
+		}
 	}
 
 	return totalStability
@@ -32,7 +37,7 @@ func FitnessMoviments(genome types.Genome) float64 {
 		totalMoviments += displacement.MovimentDistance()
 	}
 
-	penality := float64(utils.InvalidOrderingCount(genome)/len(genome)) * totalMoviments
+	penality := float64(float64(utils.InvalidOrderingCount(genome))/float64(len(genome))) * totalMoviments
 
 	return totalMoviments + penality
 }
