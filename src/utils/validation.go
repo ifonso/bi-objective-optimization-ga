@@ -4,40 +4,46 @@ import (
 	"github.com/ifonso/bi-objective-optimization-ga/src/types"
 )
 
-// Check if a container can be removed from the harbor by checking if is there a container on top of it.
-func CanRemoveContainerFromHarbor(harbor []types.Container, contaienr types.Container) bool {
-	if contaienr.Position.Z == 2 {
+// CanRemoveContainerFromHarbor checks if a container can be removed from the given position in the harbor.
+func CanRemoveContainerFromHarbor(harbor []types.Container, container types.Container) bool {
+	// Check if the container is on the second floor
+	if container.Position.Z == 2 {
 		return true
 	}
 
+	// Check if there is any container on the second floor directly above the given container
 	for _, c := range harbor {
-		if c.Position.Z == 2 && c.Position.X == contaienr.Position.X && c.Position.Y == contaienr.Position.Y {
+		if c.Position.Z == 2 && c.Position.X == container.Position.X && c.Position.Y == container.Position.Y {
 			return false
 		}
 	}
 
+	// No container directly above
 	return true
 }
 
-// Check if a container can be added to the ship by checking if is there a container on its bottle to be stacked.
+// CanAddContainerIntoShipPosition checks if a container can be added to the given position on the ship.
 func CanAddContainerIntoShipPosition(ship []types.Container, position types.Position) bool {
-	// Check if there is a container in choosen position
+	// Check if there is a container in the chosen position
 	for _, c := range ship {
 		if c.Position.X == position.X && c.Position.Y == position.Y && c.Position.Z == position.Z {
 			return false
 		}
 	}
-	// Check if the container is in first floor
+
+	// Check if the container is on the first floor
 	if position.Z == 1 {
 		return true
 	}
-	// Check if there is a container underneath the choosen position
+
+	// Check if there is a container underneath the chosen position
 	for _, c := range ship {
 		if c.Position.X == position.X && c.Position.Y == position.Y && c.Position.Z == position.Z-1 {
 			return true
 		}
 	}
 
+	// If no container is found underneath the chosen position
 	return false
 }
 
@@ -73,7 +79,10 @@ func InvalidOrderingCount(genome types.Genome) int {
 		if !CanRemoveContainerFromHarbor(harborOrdered[i+1:], harborOrdered[i]) {
 			invalidRemoval++
 		}
-		if !CanAddContainerIntoShipPosition(shipOrdered[:i+1], shipOrdered[i+1].Position) {
+	}
+
+	for i := 0; i < len(genome)-1; i++ {
+		if !CanAddContainerIntoShipPosition(shipOrdered[:i], shipOrdered[i].Position) {
 			invalidAddition++
 		}
 	}

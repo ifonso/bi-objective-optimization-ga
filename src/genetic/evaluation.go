@@ -43,7 +43,7 @@ func FitnessMoviments(genome types.Genome) float64 {
 }
 
 // Returns the best genome from a tournament selection.
-func TournamentSelection(population types.Population, tournamentSize int) types.Genome {
+func TournamentSelection(population types.Population, tournamentSize int) (types.Genome, types.Genome) {
 	if tournamentSize > len(population) {
 		panic("Tournament size is greater than the population size")
 	}
@@ -56,17 +56,11 @@ func TournamentSelection(population types.Population, tournamentSize int) types.
 
 	selected = RankIndividuals(selected)
 
-	return selected[0]
+	return selected[0], selected[1]
 }
 
 // Returns different parents based on tournament selection.
 func GetParents(population types.Population, tournamentSize int) (types.Genome, types.Genome) {
-	parent1 := TournamentSelection(population, tournamentSize)
-	parent2 := TournamentSelection(population, tournamentSize)
-
-	for parent1.Equals(parent2) {
-		parent2 = TournamentSelection(utils.RemoveElement(population, parent1), tournamentSize)
-	}
-
+	parent1, parent2 := TournamentSelection(population, tournamentSize)
 	return parent1, parent2
 }

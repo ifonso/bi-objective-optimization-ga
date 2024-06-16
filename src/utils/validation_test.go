@@ -64,8 +64,12 @@ func TestIsValidSolutionGenome(t *testing.T) {
 
 func TestInvalidOrderingCount(t *testing.T) {
 	genome := types.Genome{
-		{InitialPosition: types.Position{X: 1, Y: 1, Z: 1}, FinalPosition: types.Position{X: 1, Y: 1, Z: 1}},
-		{InitialPosition: types.Position{X: 1, Y: 1, Z: 2}, FinalPosition: types.Position{X: 1, Y: 1, Z: 2}},
+		{InitialPosition: types.Position{X: 5, Y: 2, Z: 2}, FinalPosition: types.Position{X: 3, Y: 2, Z: 3}},
+		{InitialPosition: types.Position{X: 2, Y: 3, Z: 2}, FinalPosition: types.Position{X: 3, Y: 3, Z: 1}},
+		{InitialPosition: types.Position{X: 4, Y: 2, Z: 2}, FinalPosition: types.Position{X: 3, Y: 2, Z: 1}},
+		{InitialPosition: types.Position{X: 3, Y: 1, Z: 2}, FinalPosition: types.Position{X: 2, Y: 2, Z: 1}},
+		{InitialPosition: types.Position{X: 2, Y: 1, Z: 1}, FinalPosition: types.Position{X: 3, Y: 4, Z: 1}},
+		{InitialPosition: types.Position{X: 4, Y: 2, Z: 1}, FinalPosition: types.Position{X: 2, Y: 3, Z: 1}},
 	}
 
 	if count := utils.InvalidOrderingCount(genome); count != 1 {
@@ -73,8 +77,8 @@ func TestInvalidOrderingCount(t *testing.T) {
 	}
 
 	genome = types.Genome{
-		{InitialPosition: types.Position{X: 1, Y: 1, Z: 2}, FinalPosition: types.Position{X: 1, Y: 1, Z: 2}},
-		{InitialPosition: types.Position{X: 1, Y: 1, Z: 1}, FinalPosition: types.Position{X: 1, Y: 1, Z: 1}},
+		{InitialPosition: types.Position{X: 1, Y: 1, Z: 2}, FinalPosition: types.Position{X: 1, Y: 1, Z: 1}},
+		{InitialPosition: types.Position{X: 1, Y: 1, Z: 1}, FinalPosition: types.Position{X: 1, Y: 1, Z: 2}},
 	}
 
 	if count := utils.InvalidOrderingCount(genome); count != 0 {

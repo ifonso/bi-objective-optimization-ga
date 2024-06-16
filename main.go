@@ -13,11 +13,11 @@ func RunEvolution(populationSize int, generations int) {
 
 	for i := 0; i < generations; i++ {
 		fmt.Printf("\nGeneration: %d\n", i)
-		fmt.Println(utils.InvalidOrderingCount(population[0]))
 		genetic.PrintGenome(population[0], false)
 		population = genetic.DoGeneration(population)
 	}
 
+	fmt.Println(utils.InvalidOrderingCount(population[0]))
 	genetic.PrintGenome(population[0], true)
 }
 
